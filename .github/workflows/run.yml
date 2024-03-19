@@ -5,73 +5,65 @@ on:
     types: [ created ]
 
 jobs:
-  build-win:
-    runs-on: windows-latest
+  build:
+    runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        platform:
-          - windows/amd64
+        os:
+          - windows-latest
+          - macos-latest
     steps:
-    - uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-    - name: Set up Python 3.11
-      uses: actions/setup-python@v3
-      with:
-        python-version: "3.11"
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v3
+        with:
+          python-version: "3.11"
 
-    - name: Install dependencies
-      run: |
-        echo -n ${{ github.event.release.tag_name }} > assets/version.txt
-        
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
-        flet pack main.py --icon assets/icon.ico --name ebook-downloader --distpath dist/ebook-downloader --add-data=assets/*:assets
-        
-        Compress-Archive -Path dist/ebook-downloader -DestinationPath dist.zip -CompressionLevel Optimal
+      - name: Build macOs Package
+        id: build-macos-package
+        if: matrix.os == 'macos-latest'
+        run: |
+          echo -n ${{ github.event.release.tag_name }} > assets/version.txt
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          flet pack main.py --icon assets/icon.icns --name 中小学电子教材下载 --distpath dist --add-data=assets/*:assets
+          cd dist && ls -al
+          tar -czf ebook-downloader-macos.tar.gz 中小学电子教材下载.app
 
-    - name: Upload Release Asset
-      id: upload-release-asset
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ github.event.release.upload_url }}
-        asset_path: ./dist.zip
-        asset_name: ebook-downloader-${{ github.event.release.tag_name }}-windows.zip
-        asset_content_type: application/octet-stream
+      - name: Build Windows Package
+        id: build-windows-package
+        if: matrix.os == 'windows-latest'
+        run: |
+          echo -n ${{ github.event.release.tag_name }} > assets/version.txt
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          flet pack main.py --icon assets/icon.ico --name ebook-downloader --distpath dist/ebook-downloader --add-data=assets/*:assets
+          Get-ChildItem -Path dist\ebook-downloader
+          Rename-Item -Path dist\ebook-downloader\ebook-downloader.exe -NewName 中小学电子教材下载.exe
+          Get-ChildItem -Path dist\ebook-downloader
+          Compress-Archive -Path dist\ebook-downloader -DestinationPath ebook-downloader.zip -CompressionLevel Optimal
 
-  build-mac:
-    runs-on: macos-latest
+      - name: Upload macOs Release Asset
+        id: upload-macos-release-asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        if: matrix.os == 'macos-latest'
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ./dist/ebook-downloader-macos.tar.gz
+          asset_name: ebook-downloader-${{ github.event.release.tag_name }}-macos.tar.gz
+          asset_content_type: application/octet-stream
 
-    steps:
-    - uses: actions/checkout@v3
-
-    - name: Set up Python 3.11
-      uses: actions/setup-python@v3
-      with:
-        python-version: "3.11"
-
-    - name: Install dependencies
-      run: |
-        echo -n ${{ github.event.release.tag_name }} > assets/version.txt
-        
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
-        flet pack main.py --icon assets/icon.icns --name ebook-downloader --distpath dist --add-data=assets/*:assets
-        ls -al dist/
-
-    - name: Package .app folder
-      run: |
-         cd dist
-         tar -czf ebook-downloader-macos.tar.gz ebook-downloader.app
-
-    - name: Upload Release Asset
-      id: upload-release-asset
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ github.event.release.upload_url }}
-        asset_path: ./dist/ebook-downloader-macos.tar.gz
-        asset_name: ebook-downloader-${{ github.event.release.tag_name }}-macos.tar.gz
-        asset_content_type: application/octet-stream
+      - name: Upload Windows Release Asset
+        id: upload-windows-release-asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        if: matrix.os == 'windows-latest'
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ./ebook-downloader.zip
+          asset_name: ebook-downloader-${{ github.event.release.tag_name }}-windows.zip
+          asset_content_type: application/octet-stream
