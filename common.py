@@ -46,7 +46,7 @@ class BookHelper:
             custom_properties = book.get('custom_properties')
 
             download_path_parts = [tags_dict.get(tag) for tag in tag_paths[0].split('/')]
-            download_path = '/'.join(download_path_parts)
+            download_path = os.sep.join(download_path_parts)
             download_format = custom_properties.get('format')
             title = book.get('title')
 

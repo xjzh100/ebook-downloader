@@ -25,11 +25,9 @@ jobs:
         
         python -m pip install --upgrade pip
         pip install -r requirements.txt
-        flet pack main.py --icon assets/icon.ico --name ebook-downloader --distpath dist --add-data=assets/*:assets
+        flet pack main.py --icon assets/icon.ico --name ebook-downloader --distpath dist/ebook-downloader --add-data=assets/*:assets
         
-        copy README.md dist
-        copy LICENSE dist
-        Compress-Archive -Path dist -DestinationPath dist.zip -CompressionLevel Optimal
+        Compress-Archive -Path dist/ebook-downloader -DestinationPath dist.zip -CompressionLevel Optimal
 
     - name: Upload Release Asset
       id: upload-release-asset
