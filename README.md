@@ -32,20 +32,27 @@
 - [x] 主题切换（完成）
 - [ ] 任务栏通知（开发中）
 - [ ] 教材预览（评估中）
-- [ ] 配置化（评估中）
+- [ ] 个性化设置（评估中）
 - [ ] 功能优化
 
 # 快速体验
 
-在右侧release下的Assets选择对应版本下载即可，或者点击 https://github.com/v5tech/ebook-downloader/releases
+点击 https://github.com/v5tech/ebook-downloader/releases 选择适合自己的版本下载即可。
 
 # 功能截图
 
-![](Screenshots/Snipaste_2024-03-19_12-55-18.png)
-![](Screenshots/Snipaste_2024-03-19_12-58-04.png)
-![](Screenshots/Snipaste_2024-03-19_12-58-10.png)
-![](Screenshots/Snipaste_2024-03-19_12-58-24.png)
-![](Screenshots/Snipaste_2024-03-19_12-58-34.png)
+* 软件首页
+![](Screenshots/Snipaste_2024-03-19_20-33-34.png)
+* 下载书籍
+![](Screenshots/Snipaste_2024-03-19_20-34-21.png)
+* 下载完成
+![](Screenshots/Snipaste_2024-03-19_20-34-36.png)
+* 深色主题
+![](Screenshots/Snipaste_2024-03-19_20-34-58.png)
+* 浅色主题
+![](Screenshots/Snipaste_2024-03-19_20-35-07.png)
+* 免责声明
+![](Screenshots/Snipaste_2024-03-19_20-35-17.png)
 
 # 源码构建
 
@@ -69,7 +76,7 @@ flet pack main.py --icon assets/icon.ico --name ebook-downloader --distpath dist
 
 # 星星之路
 
-[![Stargazers over time](https://starchart.cc/v5tech/ebook-downloader.svg)](https://starchart.cc/v5tech/ebook-downloader)
+[![Stargazers over time](https://starchart.cc/v5tech/ebook-downloader.svg?variant=adaptive)](https://starchart.cc/v5tech/ebook-downloader)
 
 # 开源协议
 
@@ -77,5 +84,5 @@ Apache-2.0 license
 
 # 感谢
 
-- 国家中小学智慧教育平台：https://basic.smartedu.cn/tchMaterial
-- flet-dev：https://github.com/flet-dev/flet
+- [国家中小学智慧教育平台](https://basic.smartedu.cn)
+- [flet-dev](https://github.com/flet-dev/flet)
